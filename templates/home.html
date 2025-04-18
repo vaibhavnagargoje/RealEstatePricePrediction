@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Price Prediction - Real Estate ML</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Real Estate ML</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('home') }}"><i class="bi bi-house-fill me-1"></i>Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('compare_models') }}"><i class="bi bi-bar-chart-fill me-1"></i>Model Comparison</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}"><i class="bi bi-upload me-1"></i>New Dataset</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('about') }}"><i class="bi bi-info-circle-fill me-1"></i>About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-12 text-center mb-4">
+                <h1>Real Estate Price Prediction</h1>
+                <p class="lead">Enter property details to predict its price using machine learning</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-10">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="m-0"><i class="bi bi-house-door me-2"></i>Property Details</h4>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ url_for('make_prediction') }}" method="post" id="predictionForm" class="needs-validation" novalidate>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card mb-4">
+                                        <div class="card-header bg-light">
+                                            <h5 class="m-0">Basic Information</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            {% for feature in numerical_features %}
+                                                {% if feature != target and feature in ['sqft', 'bedrooms', 'bathrooms', 'year_built'] %}
+                                                <div class="mb-3">
+                                                    <label for="{{ feature }}" class="form-label">
+                                                        {{ feature|capitalize }}
+                                                        <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" 
+                                                           title="{{ feature_descriptions.get(feature, 'Property ' + feature) }}"></i>
+                                                    </label>
+                                                    <input type="number" class="form-control" id="{{ feature }}" name="{{ feature }}" required 
+                                                           step="{{ '1' if feature in ['bedrooms', 'year_built'] else '0.01' }}"
+                                                           min="{{ '1' if feature in ['bedrooms', 'sqft'] else '0.5' if feature == 'bathrooms' else '1900' if feature == 'year_built' else '0' }}">
+                                                </div>
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            {% if 'property_type' in categorical_features %}
+                                            <div class="mb-3">
+                                                <label for="property_type" class="form-label">
+                                                    Property Type
+                                                    <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" 
+                                                       title="{{ feature_descriptions.get('property_type', 'Type of property') }}"></i>
+                                                </label>
+                                                <select class="form-select" id="property_type" name="property_type" required>
+                                                    <option value="" selected disabled>Select property type</option>
+                                                    {% for value in categorical_values.get('property_type', []) %}
+                                                    <option value="{{ value }}">{{ value }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="card">
+                                        <div class="card-header bg-light">
+                                            <h5 class="m-0">Model Selection</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-3">
+                                                <label class="form-label">Select Prediction Model</label>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="model" id="model_rf" value="random_forest" checked>
+                                                    <label class="form-check-label" for="model_rf">
+                                                        Random Forest 
+                                                        <span class="badge bg-success">Recommended</span>
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="model" id="model_lr" value="linear_regression">
+                                                    <label class="form-check-label" for="model_lr">
+                                                        Linear Regression
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="card h-100">
+                                        <div class="card-header bg-light">
+                                            <h5 class="m-0">Additional Features</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            {% if 'neighborhood' in categorical_features %}
+                                            <div class="mb-3">
+                                                <label for="neighborhood" class="form-label">
+                                                    Neighborhood
+                                                    <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" 
+                                                       title="{{ feature_descriptions.get('neighborhood', 'Geographic area within the city') }}"></i>
+                                                </label>
+                                                <select class="form-select" id="neighborhood" name="neighborhood" required>
+                                                    <option value="" selected disabled>Select neighborhood</option>
+                                                    {% for value in categorical_values.get('neighborhood', []) %}
+                                                    <option value="{{ value }}">{{ value }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            {% endif %}
+                                            
+                                            {% for feature in numerical_features %}
+                                                {% if feature != target and feature in ['lot_size', 'garage', 'floors', 'distance_to_city_center', 'school_rating'] %}
+                                                <div class="mb-3">
+                                                    <label for="{{ feature }}" class="form-label">
+                                                        {{ feature|replace('_', ' ')|capitalize }}
+                                                        <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" 
+                                                           title="{{ feature_descriptions.get(feature, 'Property ' + feature|replace('_', ' ')) }}"></i>
+                                                    </label>
+                                                    <input type="number" class="form-control" id="{{ feature }}" name="{{ feature }}" required
+                                                           step="{{ '0.01' if feature == 'lot_size' or feature == 'distance_to_city_center' else '1' }}"
+                                                           min="{{ '0' if feature == 'garage' or feature == 'distance_to_city_center' else '1' if feature == 'floors' else '0.01' if feature == 'lot_size' else '1' }}"
+                                                           max="{{ '10' if feature == 'school_rating' else '' }}">
+                                                </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                            
+                                            {% if 'basement' in features %}
+                                            <div class="mb-3">
+                                                <label class="form-label">
+                                                    Basement
+                                                    <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" 
+                                                       title="{{ feature_descriptions.get('basement', 'Whether the home has a basement') }}"></i>
+                                                </label>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="basement" id="basement_yes" value="1">
+                                                    <label class="form-check-label" for="basement_yes">Yes</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="basement" id="basement_no" value="0" checked>
+                                                    <label class="form-check-label" for="basement_no">No</label>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-4">
+                                <div class="col-md-12 text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="bi bi-calculator me-2"></i>Predict Price
+                                    </button>
+                                    <button type="reset" class="btn btn-outline-secondary btn-lg ms-2">
+                                        <i class="bi bi-arrow-repeat me-2"></i>Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Information -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-10">
+                <div class="card shadow">
+                    <div class="card-header bg-info text-white">
+                        <h4 class="m-0"><i class="bi bi-info-circle me-2"></i>Feature Information</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>The following features are used to predict house prices in this model:</p>
+                        
+                        <div class="feature-list mt-4">
+                            <div class="row">
+                                {% for feature, description in feature_descriptions.items() %}
+                                    {% if feature in features and feature != target %}
+                                    <div class="col-md-6 mb-3">
+                                        <div class="feature-info-card">
+                                            <h5>{{ feature|replace('_', ' ')|capitalize }}</h5>
+                                            <p>{{ description }}</p>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize tooltips
+        document.addEventListener('DOMContentLoaded', function() {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+            
+            // Form validation
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Real Estate Price Prediction</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Real Estate ML</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('home') }}"><i class="bi bi-house-fill me-1"></i>Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('compare_models') }}"><i class="bi bi-bar-chart-fill me-1"></i>Model Comparison</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}"><i class="bi bi-upload me-1"></i>New Dataset</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('about') }}"><i class="bi bi-info-circle-fill me-1"></i>About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-12 text-center mb-4">
+                <h1>About This Project</h1>
+                <p class="lead">Real Estate Price Prediction using Machine Learning</p>
+            </div>
+        </div>
+
+        <!-- Project Overview Section -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-10">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="m-0"><i class="bi bi-info-circle me-2"></i>Project Overview</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>This application uses machine learning to predict real estate prices based on various property features. It demonstrates how data science can be applied to solve real-world problems in the real estate industry.</p>
+                        
+                        <p>The application allows users to:</p>
+                        <ul>
+                            <li>Upload real estate datasets for analysis</li>
+                            <li>Train machine learning models on the data</li>
+                            <li>Compare performance of different algorithms</li>
+                            <li>Predict prices for new properties</li>
+                            <li>Visualize model performance and property features</li>
+                        </ul>
+                        
+                        <p>This project demonstrates the practical application of machine learning techniques to real estate valuation, providing insights into which factors most significantly influence property prices.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Machine Learning Models Section -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-10">
+                <div class="card shadow">
+                    <div class="card-header bg-success text-white">
+                        <h4 class="m-0"><i class="bi bi-gear me-2"></i>Machine Learning Models</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-header bg-light">
+                                        <h5 class="m-0">Linear Regression</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>A statistical method that models the relationship between a dependent variable and one or more independent variables by fitting a linear equation.</p>
+                                        
+                                        <h6>Key Characteristics:</h6>
+                                        <ul>
+                                            <li>Simple and interpretable</li>
+                                            <li>Works well with linearly related data</li>
+                                            <li>Computationally efficient</li>
+                                            <li>Provides insights into feature importance</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-header bg-light">
+                                        <h5 class="m-0">Random Forest</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>An ensemble learning method that constructs multiple decision trees during training and outputs the average prediction of the individual trees.</p>
+                                        
+                                        <h6>Key Characteristics:</h6>
+                                        <ul>
+                                            <li>Handles non-linear relationships well</li>
+                                            <li>Robust to outliers and noise</li>
+                                            <li>Provides feature importance ranking</li>
+                                            <li>Reduces overfitting compared to single decision trees</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Features Section -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-10">
+                <div class="card shadow">
+                    <div class="card-header bg-info text-white">
+                        <h4 class="m-0"><i class="bi bi-list-check me-2"></i>Key Features</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="feature-info-card h-100">
+                                    <h5><i class="bi bi-cloud-upload me-2"></i>Data Upload</h5>
+                                    <p>Upload your own real estate dataset in CSV or Excel format. The application automatically detects features and provides dataset statistics.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <div class="feature-info-card h-100">
+                                    <h5><i class="bi bi-graph-up me-2"></i>Interactive Visualizations</h5>
+                                    <p>Explore model performance through interactive charts showing actual vs. predicted values, feature importance, and more.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <div class="feature-info-card h-100">
+                                    <h5><i class="bi bi-calculator me-2"></i>Price Prediction</h5>
+                                    <p>Enter property details to get price predictions based on machine learning models trained on your dataset.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="feature-info-card h-100">
+                                    <h5><i class="bi bi-bar-chart me-2"></i>Model Comparison</h5>
+                                    <p>Compare performance metrics between Linear Regression and Random Forest to determine the best model for your data.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <div class="feature-info-card h-100">
+                                    <h5><i class="bi bi-lightbulb me-2"></i>Feature Importance</h5>
+                                    <p>Discover which property characteristics have the biggest impact on price according to the models.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <div class="feature-info-card h-100">
+                                    <h5><i class="bi bi-gear-wide-connected me-2"></i>Model Training</h5>
+                                    <p>Train machine learning models on your data with customizable feature selection and test split size.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technologies Used Section -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-10">
+                <div class="card shadow">
+                    <div class="card-header bg-secondary text-white">
+                        <h4 class="m-0"><i class="bi bi-code-slash me-2"></i>Technologies Used</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <h5>Backend</h5>
+                                <ul class="list-group">
+                                    <li class="list-group-item">Python</li>
+                                    <li class="list-group-item">Flask</li>
+                                    <li class="list-group-item">Scikit-learn</li>
+                                    <li class="list-group-item">Pandas</li>
+                                    <li class="list-group-item">NumPy</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <h5>Frontend</h5>
+                                <ul class="list-group">
+                                    <li class="list-group-item">HTML5 / CSS3</li>
+                                    <li class="list-group-item">JavaScript</li>
+                                    <li class="list-group-item">Bootstrap 5</li>
+                                    <li class="list-group-item">Chart.js</li>
+                                    <li class="list-group-item">Jinja2 Templates</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <h5>Data Analysis</h5>
+                                <ul class="list-group">
+                                    <li class="list-group-item">Feature Engineering</li>
+                                    <li class="list-group-item">Data Normalization</li>
+                                    <li class="list-group-item">Cross-Validation</li>
+                                    <li class="list-group-item">Model Evaluation</li>
+                                    <li class="list-group-item">Feature Importance</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-10 text-center">
+                <p class="text-muted">© 2025 Real Estate Price Prediction | Developed for educational purposes | Last updated: April 18, 2025</p>
+                <a href="{{ url_for('index') }}" class="btn btn-primary">
+                    <i class="bi bi-house me-2"></i>Return to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
